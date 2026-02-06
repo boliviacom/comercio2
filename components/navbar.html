@@ -1,0 +1,61 @@
+<div class="max-w-7xl mx-auto px-4">
+    <div class="flex items-center justify-between h-12 md:h-14">
+        <div class="flex-shrink-0 h-full flex items-center py-2 mr-4 relative">
+            <button id="categories-toggle"
+                class="h-full bg-white/95 hover:bg-white text-primary font-bold tracking-wide text-xs md:text-sm px-3 md:px-6 rounded-md transition-all duration-300 flex items-center gap-2 group shadow-sm">
+                <span class="material-icons text-lg md:text-xl">grid_view</span>
+                <span class="hidden sm:inline">CATEGORÍAS</span>
+                <span class="material-icons transition-transform duration-300 text-sm"
+                    id="categories-arrow">expand_more</span>
+            </button>
+            <div id="categories-dropdown-menu"
+                class="absolute top-full left-0 mt-2 w-64 bg-white dark:bg-gray-700 shadow-xl rounded-lg overflow-hidden transition-all duration-300 hidden z-50 transform origin-top scale-95 opacity-0">
+                <div id="dropdown-links-container" class="py-2">
+                    <a class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200" href="#">Cargando...</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex flex-grow h-full items-center justify-start pl-4 xl:pl-8 overflow-x-auto">
+            <div class="flex items-center space-x-1 xl:space-x-2 whitespace-nowrap" id="main-nav-links">
+                <a class="text-white hover:text-white/90 hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all relative group"
+                    href="index.html">
+                    Inicio
+                    <span
+                        class="absolute bottom-1.5 left-3 right-3 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                </a>
+                <a class="text-white hover:text-white/90 hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all relative group"
+                    href="productos.html?categoria=Edulcorantes">
+                    Edulcorantes
+                    <span
+                        class="absolute bottom-1.5 left-3 right-3 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                </a>
+                <a class="text-white hover:text-white/90 hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all relative group"
+                    href="productos.html?categoria=Galletas">
+                    Galletas
+                    <span
+                        class="absolute bottom-1.5 left-3 right-3 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                </a>
+                <a class="text-white hover:text-white/90 hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all relative group"
+                    href="productos.html?categoria=Pastas">
+                    Pastas
+                    <span
+                        class="absolute bottom-1.5 left-3 right-3 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                </a>
+                <a class="text-white hover:text-white/90 hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all relative group"
+                    href="productos.html?categoria=Bebidas">
+                    Bebidas
+                    <span
+                        class="absolute bottom-1.5 left-3 right-3 h-0.5 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                </a>
+            </div>
+        </div>
+
+        <div class="lg:hidden flex items-center">
+            <button id="mobile-menu-open-button"
+                class="text-white hover:text-secondary focus:outline-none transition-colors p-2" aria-expanded="false">
+                <span class="material-icons text-2xl">menu</span>
+            </button>
+        </div>
+    </div>
+</div>

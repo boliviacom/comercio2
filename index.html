@@ -3,16 +3,13 @@
 
 <head>
     <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Geek - Natural Food Store</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap"
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-        rel="stylesheet" />
-
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -29,150 +26,21 @@
     </style>
 </head>
 
-<body class="bg-gray-50 dark:bg-background-dark min-h-screen flex flex-col">
+<body class="bg-gray-50 min-h-screen flex flex-col">
 
-    <header class="font-display shadow-md relative z-30">
-        <div class="bg-white dark:bg-surface-dark px-4 py-4 transition-colors duration-300">
-            <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-8">
-                <div class="w-full flex flex-col md:flex-row items-center justify-between gap-4 lg:contents">
-                    <div class="flex items-center flex-shrink-0 self-start md:self-center">
-                        <a class="flex items-end gap-3 group cursor-pointer" href="index.html">
-                            <div class="flex flex-col justify-center -ml-1 pb-1">
-                                <img src="imagenes/logo.png" alt="Geek Logo" class="h-8 md:h-10 w-auto" />
-                            </div>
-                        </a>
-                    </div>
+    <header id="layout-header" class="font-display shadow-md relative z-30 bg-white"></header>
 
-                    <div
-                        class="w-full lg:flex-grow lg:max-w-xl mx-auto order-last md:order-none mt-2 md:mt-0 relative z-10">
-                        <div class="relative group" id="search-container">
-                            <input id="search-input"
-                                class="w-full h-10 md:h-12 pl-4 md:pl-6 pr-20 md:pr-24 rounded-full text-sm md:text-base text-gray-700 bg-gray-50 border border-gray-200 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white placeholder-gray-400 font-medium transition-all"
-                                placeholder="Buscar productos orgánicos..." type="text" autocomplete="off" />
-                            <div class="absolute right-1 top-1 bottom-1 flex gap-1">
-                                <button id="btn-search-main"
-                                    class="w-8 h-8 md:w-10 md:h-10 bg-primary hover:bg-primary-dark rounded-full text-white transition-colors flex items-center justify-center shadow-sm">
-                                    <span class="material-icons text-lg md:text-xl">search</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+    <nav id="layout-nav" class="bg-primary shadow-lg relative z-20"></nav>
 
-                    <div
-                        class="flex items-center gap-4 md:gap-6 flex-shrink-0 self-end md:self-center absolute top-4 right-4 md:static">
-                        <div id="auth-button-container" class="flex items-center gap-2 group cursor-pointer">
-                            <label for="auth-modal" class="flex items-center gap-2 cursor-pointer">
-                                <div
-                                    class="bg-secondary/30 dark:bg-white/10 p-2 rounded-full group-hover:bg-secondary/50 transition-colors">
-                                    <span class="material-icons text-xl md:text-2xl text-primary">person_outline</span>
-                                </div>
-                                <div class="hidden xl:flex flex-col -space-y-1">
-                                    <span
-                                        class="text-[10px] text-gray-500 dark:text-gray-400 font-medium">Bienvenido</span>
-                                    <span class="text-xs font-bold text-gray-800 dark:text-white"
-                                        id="auth-status-text">Iniciar Sesión</span>
-                                </div>
-                            </label>
-                        </div>
-
-                        <a class="relative group flex items-center gap-2 cursor-pointer"
-                            onclick="document.getElementById('cart-modal').style.display='block'">
-                            <div
-                                class="bg-secondary/30 dark:bg-white/10 p-2 rounded-full group-hover:bg-secondary/50 transition-colors relative">
-                                <span class="material-icons text-xl md:text-2xl text-primary">shopping_cart</span>
-                                <span id="cart-count-badge"
-                                    class="absolute -top-1 -right-1 h-4 w-4 bg-primary text-white rounded-full flex items-center justify-center text-[10px] font-bold border-2 border-white">0</span>
-                            </div>
-                        </a>
-
-                        <button onclick="document.getElementById('branch-modal').classList.remove('hidden')"
-                            class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/20 hover:bg-secondary/40 text-primary-dark transition-all border border-primary/20">
-                            <span class="material-icons text-xs">place</span>
-                            <span id="current-branch-name"
-                                class="text-xs font-bold uppercase tracking-tight">Cargando...</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <nav class="bg-primary dark:bg-gray-800 shadow-lg relative z-20">
-            <div class="max-w-7xl mx-auto px-4">
-                <div class="flex items-center justify-between h-12 md:h-14">
-                    <div class="relative h-full flex items-center" id="categories-menu">
-                        <button id="categories-toggle"
-                            class="bg-white/95 hover:bg-white text-primary font-bold text-xs md:text-sm px-3 md:px-6 h-10 rounded-md transition-all flex items-center gap-2 shadow-sm uppercase tracking-wide">
-                            <span class="material-icons text-lg md:text-xl">grid_view</span>
-                            <span>CATEGORÍAS</span>
-                            <span class="material-icons text-sm transition-transform duration-300"
-                                id="categories-chevron">expand_more</span>
-                        </button>
-                        <div id="categories-dropdown"
-                            class="absolute top-full left-0 w-64 bg-white dark:bg-surface-dark shadow-xl rounded-b-xl border-t-2 border-primary opacity-0 invisible translate-y-2 transition-all duration-300 z-50 overflow-hidden">
-                            <div class="py-2" id="categories-list-container"></div>
-                        </div>
-                    </div>
-
-                    <div id="main-nav-links"
-                        class="hidden lg:flex flex-grow items-center space-x-1 ml-8 overflow-x-auto no-scrollbar">
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </header>
-
-    <main class="flex-grow">
+    <main id="carruseles-hub">
     </main>
 
-    <footer class="bg-white dark:bg-surface-dark border-t border-gray-100 dark:border-gray-700 pt-16 pb-8">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-                <div class="space-y-6">
-                    <img src="imagenes/logo.png" alt="Geek Logo" class="h-10 w-auto" />
-                    <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">Tu tienda de confianza para
-                        productos naturales y orgánicos. Calidad garantizada en cada producto.</p>
-                </div>
-                <div>
-                    <h4 class="text-gray-900 dark:text-white font-bold uppercase tracking-wider text-sm mb-6">Categorías
-                        Populares</h4>
-                    <ul id="footer-categories" class="space-y-4 text-sm text-gray-500 dark:text-gray-400"></ul>
-                </div>
-                <div>
-                    <h4 class="text-gray-900 dark:text-white font-bold uppercase tracking-wider text-sm mb-6">Enlaces
-                        Rápidos</h4>
-                    <ul class="space-y-4 text-sm text-gray-500 dark:text-gray-400">
-                        <li><a href="#" class="hover:text-primary transition-colors">Sobre Nosotros</a></li>
-                        <li><a href="#" class="hover:text-primary transition-colors">Preguntas Frecuentes</a></li>
-                        <li><a href="#" class="hover:text-primary transition-colors">Contacto</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-gray-900 dark:text-white font-bold uppercase tracking-wider text-sm mb-6">Contacto
-                    </h4>
-                    <ul class="space-y-4 text-sm text-gray-500 dark:text-gray-400">
-                        <li class="flex items-center gap-3"><span
-                                class="material-icons text-primary text-lg">place</span> Cochabamba, Bolivia</li>
-                        <li class="flex items-center gap-3"><span
-                                class="material-icons text-primary text-lg">phone</span> +591 70000000</li>
-                    </ul>
-                </div>
-            </div>
-            <div
-                class="pt-8 border-t border-gray-100 dark:border-gray-700 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-gray-400 text-xs uppercase tracking-widest">© 2024 GEEK Natural Store. Todos los derechos
-                    reservados.</p>
-            </div>
-        </div>
-    </footer>
+    <footer id="layout-footer" class="bg-white border-t border-gray-100 pt-16 pb-8"></footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script src="js/config/tailwindConfig.js"></script>
     <script type="module" src="js/controllers/configController.js"></script>
-    <script>
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.documentElement.classList.add('dark');
-        }
-    </script>
+    <script type="module" src="js/main.js"></script>
 </body>
 
 </html>

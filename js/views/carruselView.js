@@ -24,9 +24,11 @@ export const CarruselView = {
         const slider = document.getElementById(`slider-${carruselId}`);
         if (!slider) return;
 
+        // Buscamos el contenedor de puntos específico para este carrusel
+        const dotsContainer = document.getElementById(`dots-${carruselId}`);
         const parent = slider.parentElement;
 
-        // Autoplay solo para banners
+        // 1. Lógica de Autoplay (Solo para Banners)
         if (tipo === 'banners') {
             let isHovered = false;
             parent.addEventListener('mouseenter', () => isHovered = true);
@@ -35,16 +37,28 @@ export const CarruselView = {
             setInterval(() => {
                 if (isHovered) return;
                 const maxScroll = slider.scrollWidth - slider.clientWidth;
-                slider.scrollLeft >= maxScroll - 10 
-                    ? slider.scrollTo({ left: 0, behavior: 'smooth' }) 
-                    : slider.scrollBy({ left: slider.clientWidth, behavior: 'smooth' });
+
+                if (slider.scrollLeft >= maxScroll - 10) {
+                    slider.scrollTo({ left: 0, behavior: 'smooth' });
+                } else {
+                    slider.scrollBy({ left: slider.clientWidth, behavior: 'smooth' });
+                }
             }, 5000);
         }
 
-        // Sincronización para TÁCTIL y MOUSE
+        // 2. Sincronización de Indicadores (Dots) al hacer Scroll
         slider.addEventListener('scroll', () => {
-            const index = Math.round(slider.scrollLeft / slider.clientWidth);
-            const dots = parent.querySelectorAll('.dot');
+            if (!dotsContainer) return;
+
+            // Calculamos el índice actual
+            // Si es banner, el paso es el ancho del slider. 
+            // Si es producto/categoría, el paso es el ancho de la tarjeta + gap.
+            const firstItem = slider.firstElementChild;
+            const step = (tipo === 'banners') ? slider.clientWidth : (firstItem ? firstItem.offsetWidth + 16 : slider.clientWidth);
+
+            const index = Math.round(slider.scrollLeft / step);
+            const dots = dotsContainer.querySelectorAll('.dot-indicator');
+
             dots.forEach((dot, i) => {
                 if (i === index) {
                     dot.classList.add('bg-primary', 'w-6', 'md:w-8');
@@ -56,7 +70,6 @@ export const CarruselView = {
             });
         });
     },
-
     scrollToSlide(carruselId, index) {
         const slider = document.getElementById(`slider-${carruselId}`);
         if (slider) {
@@ -76,15 +89,15 @@ export const CarruselView = {
 
     // BANNERS: Sin texto si los campos están vacíos
     _generateHeroSection(carrusel) {
-        window.scrollToSlide = this.scrollToSlide; 
+        window.scrollToSlide = this.scrollToSlide;
         return `
         <section class="relative w-full h-[300px] sm:h-[450px] md:h-[600px] mb-12 group overflow-hidden">
             <div class="flex w-full h-full overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth touch-pan-x" id="slider-${carrusel.id}">
                 ${carrusel.items.map(item => {
-                    // Verificación estricta de contenido
-                    const hasText = (item.titulo && item.titulo.trim() !== "") || (item.subtitulo && item.subtitulo.trim() !== "");
-                    
-                    return `
+            // Verificación estricta de contenido
+            const hasText = (item.titulo && item.titulo.trim() !== "") || (item.subtitulo && item.subtitulo.trim() !== "");
+
+            return `
                     <div class="w-full flex-shrink-0 h-full snap-center relative">
                         ${item.link ? `<a href="${item.link}" class="block w-full h-full">` : ''}
                         <img class="w-full h-full object-cover" src="${item.imagen}" />
@@ -98,7 +111,7 @@ export const CarruselView = {
                         ` : ''}
                         ${item.link ? `</a>` : ''}
                     </div>`;
-                }).join('')}
+        }).join('')}
             </div>
 
             <button onclick="document.getElementById('slider-${carrusel.id}').scrollBy({left: -this.parentElement.offsetWidth, behavior: 'smooth'})"
@@ -150,27 +163,28 @@ export const CarruselView = {
 
     _generateCategoryGrid(carrusel) {
         return `
-        <section class="container mx-auto px-4 mb-16 relative">
-            <h2 class="text-center text-xl md:text-2xl font-black mb-10 uppercase">${carrusel.nombre}</h2>
-            <div class="relative group px-10">
-                <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth gap-4 md:gap-10" id="slider-${carrusel.id}">
-                    ${carrusel.items.map(item => `
-                        <a href="${item.link}" class="flex-shrink-0 w-24 md:w-36 text-center group snap-center">
-                            <div class="w-20 h-20 md:w-32 md:h-32 rounded-full bg-gray-50 border-2 border-transparent group-hover:border-primary flex items-center justify-center mx-auto transition-all shadow-inner overflow-hidden mb-3">
-                                ${this._renderMedia(item, "w-1/2 h-1/2 object-contain")}
-                            </div>
-                            <span class="text-[9px] md:text-xs font-black uppercase text-gray-600 group-hover:text-primary tracking-widest block leading-tight">${item.titulo}</span>
-                        </a>`).join('')}
-                </div>
-                <button onclick="document.getElementById('slider-${carrusel.id}').scrollBy({left: -200, behavior: 'smooth'})"
-                    class="absolute left-0 top-1/2 -translate-y-1/2 bg-white shadow-md w-8 h-8 flex items-center justify-center rounded-full"><span class="material-icons text-sm">chevron_left</span></button>
-                <button onclick="document.getElementById('slider-${carrusel.id}').scrollBy({left: 200, behavior: 'smooth'})"
-                    class="absolute right-0 top-1/2 -translate-y-1/2 bg-white shadow-md w-8 h-8 flex items-center justify-center rounded-full"><span class="material-icons text-sm">chevron_right</span></button>
+    <section class="container mx-auto px-4 mb-16 relative" id="section-${carrusel.id}">
+        <h2 class="text-center text-xl md:text-2xl font-black mb-10 uppercase">${carrusel.nombre}</h2>
+        <div class="relative px-10">
+            <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth gap-4 md:gap-10" id="slider-${carrusel.id}">
+                ${carrusel.items.map(item => {
+            // CONSTRUCCIÓN DEL LINK: 
+            // Si el item tiene un nombre de categoría, forzamos la ruta al catálogo
+            const destino = `productos.html?categoria=${encodeURIComponent(item.titulo)}`;
+
+            return `
+                    <a href="${destino}" class="flex-shrink-0 w-24 md:w-36 text-center group snap-center">
+                        <div class="w-20 h-20 md:w-32 md:h-32 rounded-full bg-gray-50 border-2 border-transparent group-hover:border-primary flex items-center justify-center mx-auto transition-all shadow-inner overflow-hidden mb-3">
+                            ${this._renderMedia(item, "w-1/2 h-1/2 object-contain group-hover:scale-110 transition-transform")}
+                        </div>
+                        <span class="text-[9px] md:text-xs font-black uppercase text-gray-600 group-hover:text-primary tracking-widest block leading-tight">
+                            ${item.titulo}
+                        </span>
+                    </a>`;
+        }).join('')}
             </div>
-            <div class="flex justify-center gap-2 mt-8">
-                ${carrusel.items.map((_, i) => `<div class="dot ${i === 0 ? 'bg-primary w-6' : 'bg-gray-300 w-2'} h-2 rounded-full transition-all"></div>`).join('')}
             </div>
         </section>
-        `;
+    `;
     }
 };

@@ -49,13 +49,17 @@ export const carruselController = {
                 id: item.id,
                 orden: item.orden,
                 titulo: item.titulo_manual || item.producto?.nombre || item.categoria?.nombre || '',
-                subtitulo: item.subtitulo_manual || (item.producto?.precio ? `$ ${item.producto.precio}` : ''),
+                subtitulo: item.subtitulo_manual || (item.producto?.precio ? `Bs. ${item.producto.precio.toLocaleString()}` : ''),
                 imagen: item.imagen_url_manual || item.producto?.imagen_url || item.categoria?.imagen || null,
 
-                // CAMBIO: Usamos ID si el slug no existe en la tabla
+                // ACTUALIZACIÓN AQUÍ:
                 link: item.link_destino_manual ||
-                    (esProducto ? `/producto.html?id=${item.producto.id}` :
-                        (esCategoria ? `/categoria.html?id=${item.categoria.id}` : '#')),
+                    (esProducto
+                        ? `detalle_producto.html?id=${item.producto.id}`
+                        : (esCategoria
+                            // Enviamos el slug o el id según lo que use tu productos.html
+                            ? `productos.html?categoria=${item.categoria.slug || item.categoria.id}`
+                            : '#')),
 
                 tipo: esProducto ? 'producto' : (esCategoria ? 'categoria' : 'manual')
             };

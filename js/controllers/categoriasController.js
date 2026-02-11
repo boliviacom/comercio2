@@ -4,24 +4,33 @@ import { NavbarView } from '../views/navbarView.js';
 export const CategoriasController = {
     async init() {
         try {
-            // 1. Obtenemos todas las categorías visibles
+            // 1. Obtenemos todas las categorías visibles desde el Modelo
             const todas = await CategoriasModel.fetchAllVisible();
 
-            if (!todas || todas.length === 0) return;
+            if (!todas || todas.length === 0) {
+                console.warn("[CategoriasController] No se encontraron categorías.");
+                return;
+            }
 
-            // 2. Filtramos las HIJAS para el Navbar Horizontal (Primeras 5)
+            // 2. Filtramos las categorías "Hijas" para el Navbar Horizontal (Desktop)
+            // Tomamos las primeras 5 que tengan un padre asignado
             const hijasNavbar = todas
                 .filter(cat => cat.id_padre !== null)
-                .slice(0, 5);
+                .slice(0, 5)
+                .map(h => ({
+                    id: h.id,
+                    nombre: h.nombre,
+                    link: `productos.html?categoria=${encodeURIComponent(h.nombre)}`
+                }));
 
-            // 3. Organizamos los PADRES y les asignamos sus HIJAS correspondientes
-            // Esto permite que el panel lateral sepa qué mostrar al hacer clic
+            // 3. Estructuramos los PADRES con sus HIJAS (Para el Dropdown y el Burger)
             const categoriasEstructuradas = todas
-                .filter(cat => cat.id_padre === null)
+                .filter(cat => cat.id_padre === null) // Buscamos solo los padres
                 .map(padre => ({
-                    ...padre,
+                    id: padre.id,
+                    nombre: padre.nombre,
                     link: `productos.html?categoria=${encodeURIComponent(padre.nombre)}`,
-                    // Buscamos todas las hijas que pertenecen a este padre
+                    // Mapeamos sus subcategorías correspondientes
                     subcategorias: todas
                         .filter(h => h.id_padre === padre.id)
                         .map(h => ({
@@ -31,38 +40,30 @@ export const CategoriasController = {
                         }))
                 }));
 
-            // 4. Formateamos las hijas del Navbar para consistencia
-            const hijasNavbarFormateadas = hijasNavbar.map(h => ({
-                id: h.id,
-                nombre: h.nombre,
-                link: `productos.html?categoria=${encodeURIComponent(h.nombre)}`
-            }));
-
-            // 5. Enviamos a la vista: (Padres con sus subcategorias, Hijas del Navbar)
-            NavbarView.render(categoriasEstructuradas, hijasNavbarFormateadas);
+            // 4. Enviamos los datos a la Vista
+            // NavbarView se encargará de inyectar el HTML en los IDs:
+            // - main-nav-links (Desktop horizontal)
+            // - dropdown-links-container (Desktop dropdown)
+            // - mobile-accordion-links (Mobile Burger)
+            if (NavbarView && typeof NavbarView.render === 'function') {
+                NavbarView.render(categoriasEstructuradas, hijasNavbar);
+            }
 
         } catch (error) {
-            console.error("Error en CategoriasController:", error);
+            console.error("Error crítico en CategoriasController:", error);
         }
     },
 
     /**
-     * Método para obtener productos de una subcategoría (Hija)
-     * Este lo llamará la vista cuando el usuario llegue al nivel 3
+     * Método auxiliar para cargar productos de una categoría específica
+     * Útil cuando el usuario navega profundamente en el menú.
      */
     async obtenerProductosPorCategoria(categoriaId) {
         try {
-            // Aquí llamarías a tu ProductosModel (si lo tienes) o directo a supabase
-            // Ejemplo rápido:
-            /*
-            const { data } = await supabase
-                .from('productos')
-                .select('*')
-                .eq('id_categoria', categoriaId)
-                .limit(4);
-            return data;
-            */
-            return []; // Por ahora devolvemos vacío para el skeleton
+            // Ejemplo de integración con un modelo de productos futuro
+            // const productos = await ProductosModel.getByCategory(categoriaId);
+            // return productos;
+            return []; 
         } catch (error) {
             console.error("Error al obtener productos:", error);
             return [];
